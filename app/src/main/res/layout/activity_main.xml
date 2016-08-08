@@ -20,7 +20,6 @@
         android:text="recyclerView:" />
 
     <cn.wsy.adapter.base.SuperRefreshLayout
-
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="250dp"
