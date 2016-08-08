@@ -1,8 +1,8 @@
 # SuperAdapter
 集成下拉刷新与上拉加载的通用适配器，适合RecycerView以及Listview
 
-首先使用方法：
-一、在application中的build.gradle引入:
+### 使用方法：
+####一、在application中的build.gradle引入:
 ````
 repositories {
     maven { url = 'https://dl.bintray.com/yuancloud/maven/' }
@@ -12,7 +12,7 @@ repositories {
 compile 'cn.yuancloud.app:superadapter:1.0'
 ````
 
-二、引入下拉刷新，必须在RecycerView或者ListView添加父控件SuperRefreshLayout（这个跟google自带的下拉刷新用法类同）,举例：
+####二、引入下拉刷新，必须在RecycerView或者ListView添加父控件SuperRefreshLayout（这个跟google自带的下拉刷新用法类同）,举例：
 
 ````
     <cn.wsy.adapter.base.SuperRefreshLayout
@@ -29,7 +29,7 @@ compile 'cn.yuancloud.app:superadapter:1.0'
     </cn.wsy.adapter.base.SuperRefreshLayout>
 ````
 
-三、引入上拉加载，必须注入SuperRefreshLayout的动态加载监听，举例：
+####三、引入上拉加载，必须注入SuperRefreshLayout的动态加载监听，举例：
 ````
   refreshLayout.setOnRefreshListener(new SuperRefreshLayout.OnRefreshListener() {
             @Override
@@ -47,5 +47,5 @@ compile 'cn.yuancloud.app:superadapter:1.0'
 有什么issue，可以报给我，感谢各位读者！
 简书：http://www.jianshu.com/users/d388bcf9c4d3/latest_articles
 
-####傻小孩b mark
+####傻小孩b 
 ####共勉，写给在成长路上奋斗的你。
