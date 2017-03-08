@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.wsy.adapter.base.SuperRefreshLayout;
+import cn.wsy.adapter.interfaces.LoadMoreListener;
+import cn.wsy.adapter.interfaces.LoadingListener;
 import cn.wsy.adapter.interfaces.OnItemClickListener;
 import cn.wsy.demo.widgets.TestAdapter;
 import cn.wsy.generallib.httplib.utils.JsonParseUtil;
@@ -149,38 +151,63 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        lvRefreshLayout.setOnRefreshListener(new SuperRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-//                handler.sendEmptyMessageDelayed(3, 2000);
-                lv_page = 1;
-                getNewFromServer(lv_page, true);
-            }
-
+        lvRefreshLayout.setOnLoadMoreListener(new LoadMoreListener() {
             @Override
             public void onLoadMore() {
-//                handler.sendEmptyMessageDelayed(2, 2000);
+                handler.sendEmptyMessageDelayed(2, 2000);
                 lv_page++;
                 getNewFromServer(lv_page, true);
             }
         });
 
+//        lvRefreshLayout.setLoadingListener(new LoadingListener() {
+//            @Override
+//            public void onRefresh() {
+////                handler.sendEmptyMessageDelayed(3, 2000);
+//                lv_page = 1;
+//                getNewFromServer(lv_page, true);
+//            }
+//
+//            @Override
+//            public void onLoadMore() {
+////                handler.sendEmptyMessageDelayed(2, 2000);
+//                lv_page++;
+//                getNewFromServer(lv_page, true);
+//            }
+//        });
 
-        refreshLayout.setOnRefreshListener(new SuperRefreshLayout.OnRefreshListener() {
+        refreshLayout.setLoadingListener(new LoadingListener() {
             @Override
             public void onRefresh() {
-//                handler.sendEmptyMessageDelayed(1, 2000);
+                handler.sendEmptyMessageDelayed(1, 2000);
                 re_page = 1;
                 getNewFromServer(re_page, false);
             }
 
             @Override
             public void onLoadMore() {
-//                handler.sendEmptyMessageDelayed(0, 2000);
+                handler.sendEmptyMessageDelayed(0, 2000);
                 re_page++;
                 getNewFromServer(re_page, false);
             }
         });
+
+//
+//        refreshLayout.setOnRefreshListener(new SuperRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+////                handler.sendEmptyMessageDelayed(1, 2000);
+//                re_page = 1;
+//                getNewFromServer(re_page, false);
+//            }
+//
+//            @Override
+//            public void onLoadMore() {
+////                handler.sendEmptyMessageDelayed(0, 2000);
+//                re_page++;
+//                getNewFromServer(re_page, false);
+//            }
+//        });
 //
     }
 
@@ -203,11 +230,11 @@ public class MainActivity extends AppCompatActivity {
         try {
             //  http://apis.baidu.com/txapi/tiyu/tiyu
             AsyncHttpClient client = new AsyncHttpClient();
-            client.addHeader("apikey", "");
             RequestParams enetity = new RequestParams();
-            enetity.add("num", String.valueOf(10));
-            enetity.add("page", String.valueOf(page));
-            client.get(this, "http://apis.baidu.com/txapi/tiyu/tiyu", enetity, new TextHttpResponseHandler() {
+            enetity.add("limit", String.valueOf(10));
+            enetity.add("offset", String.valueOf(page));
+            enetity.add("type", "hot");
+            client.get(this, "http://m.maoyan.com/movie/list.json", enetity, new TextHttpResponseHandler() {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 //                    Log.i("wusy", responseString);
@@ -220,9 +247,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     refreshLayout.setRefreshing(false);
                     lvRefreshLayout.setRefreshing(false);
-                    ResponseNew rsp = JsonParseUtil.jsonToMode(responseString, ResponseNew.class);
-                    List<ResponseNew.NewInfo> tmp = rsp.getNewslist();
-                    if (tmp.size() > 0) {
+                    ResponseMove rsp = JsonParseUtil.jsonToMode(responseString, ResponseMove.class);
+                    List<ResponseNew.NewInfo> tmp = rsp.getData().getMovies();
+                    if (tmp!= null && tmp.size() > 0) {
                         if (isLv) {
                             if (page == 1) listAdapter.removeAll(lv_data);
                             listAdapter.addAll(tmp);
